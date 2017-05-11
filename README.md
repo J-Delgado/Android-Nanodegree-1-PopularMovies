@@ -13,8 +13,8 @@ The movie detail includes original title, movie poster, a plot synopsis, user ra
 
 ## External APIs
 
-This app uses The Movie Database API to retrieve movies. You must provide your own API key in order to build the app. It must be included in strings.xml
-[The Movie Database](https://www.themoviedb.org/documentation/api)
+This app uses The Movie Database API to retrieve movies. You must provide your own API key in order to build the app. It must be included in strings.xml:
+* [The Movie Database](https://www.themoviedb.org/documentation/api)
 
 ## External libraries
 
