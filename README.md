@@ -27,5 +27,3 @@ This app uses Picasso to request movie covers and cache them:
 ![screen](../master/art/moviesList.png)
 ![screen](../master/art/moviesDetail.png)
 ![screen](../master/art/moviesDetail2.png)
-
-<img alt="Main Activity" src="http://imgur.com/ikTczyR.png" /> <img alt="Detail Activity" src="http://imgur.com/cYwB7Il.png" />
