@@ -1,0 +1,5 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <integer name="items_per_row">2</integer>
+    <dimen name="app_bar_height">300dp</dimen>
+</resources>
