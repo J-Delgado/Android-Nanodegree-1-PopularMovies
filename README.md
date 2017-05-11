@@ -24,6 +24,6 @@ This app uses Picasso to request movie covers and cache them:
 
 ## Screenshoots
 
-![screen](../master/art/moviesList.png)
-![screen](../master/art/moviesDetail.png)
-![screen](../master/art/moviesDetail2.png)
+![screen](../master/art/movieList.png)
+![screen](../master/art/movieDetail.png)
+![screen](../master/art/movieDetail2.png)
