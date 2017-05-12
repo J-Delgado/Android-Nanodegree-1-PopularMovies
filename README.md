@@ -4,12 +4,12 @@ This is the app that I have built for Popular Movies Stage 1. First project in t
 
 ## Features
 
-Upon launch, present the user with a grid arrangement of movie posters using Recycler View.
-The user can use "Pull to refresh" to update the data (Useful when previously there was no internet connection).
-Sort movies by most popular or highest rated using Floating Action Button.
-When the user taps on a movie, there is an animation to open the movie detail.
+* Upon launch, present the user with a grid arrangement of movie posters using Recycler View.
+* The user can use "Pull to refresh" to update the data (Useful when previously there was no internet connection).
+* Sort movies by most popular or highest rated using Floating Action Button.
+* When the user taps on a movie, there is an animation to open the movie detail.
 
-The movie detail includes original title, movie poster, a plot synopsis, user rating, release date and a image backdrop with animated Toolbar.
+* The movie detail includes original title, movie poster, a plot synopsis, user rating, release date and a image backdrop with animated Toolbar.
 
 ## External APIs
 
