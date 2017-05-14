@@ -1,0 +1,126 @@
+/*
+ * Copyright (C) 2017 Javier Delgado
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.javierdelgado.popularmovies_stage1;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
+import java.util.List;
+
+import static android.view.View.GONE;
+
+/**
+ * Created by Delga on 03/05/2017.
+ */
+
+class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.TrailersViewHolder> {
+
+    private List<String> mTrailersList = null;
+    private Context mContext;
+
+    public TrailersAdapter(Context context) {
+        mContext = context;
+    }
+
+    @Override
+    public TrailersViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.trailer_item, parent, false);
+        return new TrailersViewHolder(mContext, view);
+    }
+
+    @Override
+    public void onBindViewHolder(TrailersViewHolder holder, int position) {
+        holder.bind(position);
+    }
+
+    @Override
+    public int getItemCount() {
+        return mTrailersList == null ? 0 : mTrailersList.size();
+    }
+
+    void setData(List<String> trailers){
+        mTrailersList = trailers;
+        notifyDataSetChanged();
+    }
+
+    class TrailersViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        private final ImageView playIcon;
+        private final ProgressBar loadingIcon;
+        Context context;
+        ImageView trailerThmb;
+
+        public TrailersViewHolder(Context context, View itemView) {
+            super(itemView);
+
+            this.context = context;
+            trailerThmb = (ImageView) itemView.findViewById(R.id.trailer_thmb);
+            playIcon = (ImageView) itemView.findViewById(R.id.play_icon);
+            loadingIcon = (ProgressBar) itemView.findViewById(R.id.loading_icon);
+            itemView.setOnClickListener(this);
+        }
+
+        void bind(int position) {
+            loadingIcon.setVisibility(View.VISIBLE);
+            playIcon.setVisibility(View.INVISIBLE);
+            Picasso.with(itemView.getContext())
+                    .load(context.getResources().getString(R.string.url_base_youtube_video_tmhb) + mTrailersList.get(position) + "/0.jpg")
+                    .error(R.drawable.sad_icon)
+                    .into(trailerThmb, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            loadingIcon.setVisibility(GONE);
+                            playIcon.setVisibility(View.VISIBLE);
+                        }
+
+                        @Override
+                        public void onError() {
+                            playIcon.setVisibility(GONE);
+                            loadingIcon.setVisibility(GONE);
+                        }
+                    })
+                    ;
+
+        }
+
+        @Override
+        public void onClick(View view) {
+            String videoPath = mContext.getResources().getString(R.string.url_base_youtube)
+                    + mTrailersList.get(this.getAdapterPosition());
+            Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(videoPath));
+            mContext.startActivity(intent);
+        }
+    }
+}

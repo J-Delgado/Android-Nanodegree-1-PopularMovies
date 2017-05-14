@@ -16,7 +16,11 @@
 
 package com.javierdelgado.popularmovies_stage1;
 
+import android.content.Context;
+
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Created by Delga on 03/05/2017.
@@ -41,6 +45,10 @@ class Movie implements Serializable {
         this.rating = rating;
         this.description = description;
 
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getTitle() {

@@ -82,6 +82,7 @@ class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder>
         void bind(int position) {
             Picasso.with(itemView.getContext())
                     .load(context.getResources().getString(R.string.base_cover_url) + mMoviesList.get(position).getCover())
+                    .error(R.drawable.sad_icon)
                     .into(movieCover);
         }
 

@@ -14,7 +14,7 @@
         android:orientation="vertical"
         >
 
-    <LinearLayout
+        <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
@@ -48,6 +48,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/release_date"
                 android:textSize="18sp"
+                android:textColor="@android:color/black"
                 />
 
             <TextView
@@ -66,6 +67,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_below="@id/movie_release_date"
                 android:textSize="18sp"
+                android:textColor="@android:color/black"
                 />
 
             <TextView
@@ -85,6 +87,58 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/trailers"
+            android:textSize="22sp"
+            android:textColor="@android:color/black"
+            android:paddingLeft="20dp"
+            />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/detail_trailers_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                />
+
+            <ProgressBar
+                android:id="@+id/loading_trailers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="invisible"
+                />
+
+            <TextView
+                android:id="@+id/textview_error_trailer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_centerInParent="true"
+                android:drawableTop="@drawable/sad_icon"
+                android:text="@string/error_loading"
+                android:visibility="invisible"
+                />
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/reviews"
+            android:textSize="22sp"
+            android:textColor="@android:color/black"
+            android:paddingLeft="20dp"
             />
 
     </LinearLayout>

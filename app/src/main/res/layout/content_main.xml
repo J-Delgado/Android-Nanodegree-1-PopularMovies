@@ -32,6 +32,7 @@
         android:layout_centerInParent="true"
         android:visibility="invisible"
         android:gravity="center"
+        android:drawableTop="@drawable/sad_icon"
         />
 
 </RelativeLayout>
