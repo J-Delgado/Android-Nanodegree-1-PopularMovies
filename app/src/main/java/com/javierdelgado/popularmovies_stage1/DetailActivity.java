@@ -44,6 +44,9 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by Delga on 03/05/2017.
  */
@@ -51,21 +54,31 @@ import java.util.List;
 public class DetailActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final String KEY_MOVIE_ID = "KEY_MOVIE_ID";
-    private RecyclerView mTrailersRecyclerView;
     private TrailersAdapter mTrailersAdapter;
     private Movie movie;
-    private ProgressBar mTrailersLoading;
+    //
+    @BindView(R.id.detail_trailers_recycler) RecyclerView mTrailersRecyclerView;
+    @BindView(R.id.loading_trailers) ProgressBar mTrailersLoading;
+    @BindView(R.id.toolbar_detail) Toolbar toolbar;
+    @BindView(R.id.fab) FloatingActionButton fab;
+    @BindView(R.id.toolbar_layout) CollapsingToolbarLayout collapsingToolbar;
+    @BindView(R.id.movie_poster) ImageView moviePoster;
+    @BindView(R.id.movie_cover) ImageView movieCover;
+    @BindView(R.id.movie_description) TextView movieDescription;
+    @BindView(R.id.movie_release_date) TextView movieReleaseDate;
+    @BindView(R.id.movie_stars) TextView movieStars;
+    @BindView(R.id.textview_error_trailer) TextView error;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_detail);
+        ButterKnife.bind(this);
+        //
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Use later
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -84,34 +97,26 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             toolbar.setTitle(R.string.app_name);
         }
 
-        CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         collapsingToolbar.setExpandedTitleColor(getResources().getColor(R.color.transparent));
 
         if (movie != null){
             collapsingToolbar.setTitle(movie.getTitle());
             collapsingToolbar.setCollapsedTitleTextColor(Color.WHITE);
 
-            ImageView moviePoster = (ImageView) findViewById(R.id.movie_poster);
             Picasso.with(this)
                     .load(getResources().getString(R.string.base_cover_url) + movie.getBackdrop())
                     .error(R.drawable.sad_icon)
                     .into(moviePoster);
 
-            ImageView movieCover = (ImageView) findViewById(R.id.movie_cover);
             Picasso.with(this)
                     .load(getResources().getString(R.string.base_cover_url) + movie.getCover())
                     .error(R.drawable.sad_icon)
                     .into(movieCover);
 
-            TextView movieDescription = (TextView) findViewById(R.id.movie_description);
             movieDescription.setText(movie.getDescription());
-            TextView movieReleaseDate = (TextView) findViewById(R.id.movie_release_date);
             movieReleaseDate.setText(movie.getReleaseDate());
-            TextView movieStars = (TextView) findViewById(R.id.movie_stars);
             movieStars.setText(String.valueOf(movie.getRating()));
 
-            mTrailersLoading = (ProgressBar) findViewById(R.id.loading_trailers);
-            mTrailersRecyclerView = (RecyclerView) findViewById(R.id.detail_trailers_recycler);
             mTrailersRecyclerView.setHasFixedSize(true);
             mTrailersAdapter = new TrailersAdapter(this);
             mTrailersRecyclerView.setAdapter(mTrailersAdapter);
@@ -131,10 +136,10 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     class TrailerDownloaderTask extends AsyncTask<Void, Void, Boolean> {
 
         private List<String> trailersList = new ArrayList<>();
+
         @Override
         protected void onPreExecute() {
             mTrailersLoading.setVisibility(View.VISIBLE);
-            TextView error = (TextView) findViewById(R.id.textview_error_trailer);
             error.setVisibility(View.INVISIBLE);
         }
 
@@ -176,7 +181,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 mTrailersAdapter.setData(trailersList);
             } else {
                 mTrailersAdapter.setData(new ArrayList<String>());
-                TextView error = (TextView) findViewById(R.id.textview_error_trailer);
                 error.setVisibility(View.VISIBLE);
             }
         }

@@ -39,6 +39,9 @@ import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static android.view.View.GONE;
 
 /**
@@ -77,18 +80,18 @@ class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.TrailersViewH
 
     class TrailersViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private final ImageView playIcon;
-        private final ProgressBar loadingIcon;
         Context context;
-        ImageView trailerThmb;
+
+        @BindView(R.id.play_icon) ImageView playIcon;
+        @BindView(R.id.loading_icon) ProgressBar loadingIcon;
+        @BindView(R.id.trailer_thmb) ImageView trailerThmb;
 
         public TrailersViewHolder(Context context, View itemView) {
             super(itemView);
 
             this.context = context;
-            trailerThmb = (ImageView) itemView.findViewById(R.id.trailer_thmb);
-            playIcon = (ImageView) itemView.findViewById(R.id.play_icon);
-            loadingIcon = (ProgressBar) itemView.findViewById(R.id.loading_icon);
+            ButterKnife.bind(this,itemView);
+
             itemView.setOnClickListener(this);
         }
 

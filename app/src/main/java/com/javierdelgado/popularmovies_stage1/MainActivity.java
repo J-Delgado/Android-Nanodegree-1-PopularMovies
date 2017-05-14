@@ -38,6 +38,9 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by Delga on 03/05/2017.
  */
@@ -48,30 +51,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String TOP = "TOP";
     private String mLastOptionSelected = POPULAR;
 
-    private Toolbar mToolbar;
     private MoviesAdapter mAdapter;
-    private RecyclerView mRecyclerView;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+
+    @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.main_recyclerview) RecyclerView mRecyclerView;
+    @BindView(R.id.swipe_refresh) SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.fab) FloatingActionButton fab;
+    @BindView(R.id.error_textview) TextView error;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-
+        ButterKnife.bind(this);
         //
-        mRecyclerView = (RecyclerView) findViewById(R.id.main_recyclerview);
+        setSupportActionBar(mToolbar);
+        //
         mRecyclerView.setHasFixedSize(true);
         mAdapter = new MoviesAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
         mToolbar.setSubtitle(R.string.most_popular);
         //
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
         //
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
         mSwipeRefreshLayout.setOnRefreshListener( new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -113,10 +116,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         private final String topRatedUrl = getResources().getString(R.string.url_base_top_rated) + getResources().getString(R.string.API_KEY_the_movie_db);
 
         private List<Movie> moviesList = new ArrayList<>();
+
         @Override
         protected void onPreExecute() {
             mSwipeRefreshLayout.setRefreshing(true);
-            TextView error = (TextView) findViewById(R.id.error_textview);
             error.setVisibility(View.INVISIBLE);
         }
 
@@ -165,7 +168,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mAdapter.setData(moviesList);
             } else {
                 mAdapter.setData(new ArrayList<Movie>());
-                TextView error = (TextView) findViewById(R.id.error_textview);
                 error.setVisibility(View.VISIBLE);
             }
         }
