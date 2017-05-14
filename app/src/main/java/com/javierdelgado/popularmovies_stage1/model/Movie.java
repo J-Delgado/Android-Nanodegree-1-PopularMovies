@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.javierdelgado.popularmovies_stage1;
+package com.javierdelgado.popularmovies_stage1.model;
 
 import java.io.Serializable;
 
@@ -22,7 +22,7 @@ import java.io.Serializable;
  * Created by Delga on 03/05/2017.
  */
 
-class Movie implements Serializable {
+public class Movie implements Serializable {
 
     private int id;
     private String title;
@@ -41,6 +41,10 @@ class Movie implements Serializable {
         this.rating = rating;
         this.description = description;
 
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getTitle() {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.javierdelgado.popularmovies_stage1;
+package com.javierdelgado.popularmovies_stage1.adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -28,15 +28,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.javierdelgado.popularmovies_stage1.R;
+import com.javierdelgado.popularmovies_stage1.activities.DetailActivity;
+import com.javierdelgado.popularmovies_stage1.model.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by Delga on 03/05/2017.
  */
 
-class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder> {
+public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder> {
 
     private List<Movie> mMoviesList = null;
     private Context mContext;
@@ -61,7 +67,7 @@ class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder>
         return mMoviesList == null ? 0 : mMoviesList.size();
     }
 
-    void setData(List<Movie> movies){
+    public void setData(List<Movie> movies){
         mMoviesList = movies;
         notifyDataSetChanged();
     }
@@ -69,19 +75,20 @@ class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder>
     class MoviesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         Context context;
-        ImageView movieCover;
+        @BindView(R.id.item_moviecover) ImageView movieCover;
 
         public MoviesViewHolder(Context context, View itemView) {
             super(itemView);
 
             this.context = context;
-            movieCover = (ImageView) itemView.findViewById(R.id.item_moviecover);
+            ButterKnife.bind(this,itemView);
             itemView.setOnClickListener(this);
         }
 
         void bind(int position) {
             Picasso.with(itemView.getContext())
                     .load(context.getResources().getString(R.string.base_cover_url) + mMoviesList.get(position).getCover())
+                    .error(R.drawable.sad_icon)
                     .into(movieCover);
         }
 
@@ -92,8 +99,7 @@ class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder>
             detailIntent.putExtra(DetailActivity.KEY_MOVIE_ID,mMoviesList.get(getAdapterPosition()));
 
             //Set up transition
-            View imageView_trans = view.findViewById(R.id.item_moviecover);
-            Pair<View, String> pair_cover = Pair.create(imageView_trans, mContext.getString(R.string.transition_movie_image));
+            Pair<View, String> pair_cover = Pair.create((View) movieCover, mContext.getString(R.string.transition_movie_image));
 
             //Animation
             ActivityOptionsCompat options = ActivityOptionsCompat.
