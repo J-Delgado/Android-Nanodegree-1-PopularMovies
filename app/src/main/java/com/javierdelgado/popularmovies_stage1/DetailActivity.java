@@ -16,13 +16,14 @@
 
 package com.javierdelgado.popularmovies_stage1;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -60,7 +61,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     @BindView(R.id.detail_trailers_recycler) RecyclerView mTrailersRecyclerView;
     @BindView(R.id.loading_trailers) ProgressBar mTrailersLoading;
     @BindView(R.id.toolbar_detail) Toolbar toolbar;
-    @BindView(R.id.fab) FloatingActionButton fab;
+    @BindView(R.id.fab_favorite) FloatingActionButton fabFavorite;
+    @BindView(R.id.fab_share) FloatingActionButton fabShare;
     @BindView(R.id.toolbar_layout) CollapsingToolbarLayout collapsingToolbar;
     @BindView(R.id.movie_poster) ImageView moviePoster;
     @BindView(R.id.movie_cover) ImageView movieCover;
@@ -68,6 +70,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     @BindView(R.id.movie_release_date) TextView movieReleaseDate;
     @BindView(R.id.movie_stars) TextView movieStars;
     @BindView(R.id.textview_error_trailer) TextView error;
+    private boolean isFavorite = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,13 +82,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Use later
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        fabFavorite.setOnClickListener(this);
+        fabShare.setOnClickListener(this);
 
         movie = null;
         if (getIntent().hasExtra(KEY_MOVIE_ID)){
@@ -130,7 +128,24 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View view) {
-        onBackPressed();
+        if (view.getId() == R.id.fab_favorite){
+            isFavorite = !isFavorite;
+            if (isFavorite) {
+                ((ImageView) view).setImageDrawable(getResources().getDrawable(R.drawable.star_selected_icon));
+            } else {
+                ((ImageView) view).setImageDrawable(getResources().getDrawable(R.drawable.star_unselected_icon));
+            }
+        } else if (view.getId() == R.id.fab_share) {
+            String videoPath = getResources().getString(R.string.url_base_youtube)
+                    + mTrailersAdapter.getTrailerUrl(0);
+            ShareCompat.IntentBuilder.from(this)
+                    .setType("text/plain")
+                    .setChooserTitle(R.string.share)
+                    .setText(getString(R.string.share_text) + " " + movie.getTitle() + "? " + videoPath)
+                    .startChooser();
+        } else {
+            onBackPressed();
+        }
     }
 
     class TrailerDownloaderTask extends AsyncTask<Void, Void, Boolean> {

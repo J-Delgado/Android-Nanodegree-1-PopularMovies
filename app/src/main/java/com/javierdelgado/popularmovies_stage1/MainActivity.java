@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.main_recyclerview) RecyclerView mRecyclerView;
     @BindView(R.id.swipe_refresh) SwipeRefreshLayout mSwipeRefreshLayout;
-    @BindView(R.id.fab) FloatingActionButton fab;
+    @BindView(R.id.fab_filter) FloatingActionButton fab;
     @BindView(R.id.error_textview) TextView error;
 
     @Override
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.fab){
+        if (view.getId() == R.id.fab_filter){
             AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
             alertBuilder.setTitle(R.string.choose_sort);
             alertBuilder.setItems(R.array.sortings_array, new DialogInterface.OnClickListener() {

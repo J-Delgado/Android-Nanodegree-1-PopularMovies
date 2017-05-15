@@ -25,6 +25,8 @@
     <string name="reviews">Reviews:</string>
     <string name="trailers">Trailers:</string>
     <string name="error_loading">Error loading</string>
+    <string name="share">Share movie</string>
+    <string name="share_text">Have you watched</string>
 
 
 </resources>

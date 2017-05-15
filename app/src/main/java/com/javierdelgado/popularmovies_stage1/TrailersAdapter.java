@@ -78,6 +78,13 @@ class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.TrailersViewH
         notifyDataSetChanged();
     }
 
+    public String getTrailerUrl(int position){
+        if (mTrailersList != null && mTrailersList.size() > 0 && position < mTrailersList.size()){
+            return mTrailersList.get(position);
+        }
+        return "";
+    }
+
     class TrailersViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         Context context;
