@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package com.javierdelgado.popularmovies_stage1;
+package com.javierdelgado.popularmovies_stage1.activities;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -33,6 +31,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.javierdelgado.popularmovies_stage1.R;
+import com.javierdelgado.popularmovies_stage1.adapters.TrailersAdapter;
+import com.javierdelgado.popularmovies_stage1.model.Movie;
+import com.javierdelgado.popularmovies_stage1.utils.Utils;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;

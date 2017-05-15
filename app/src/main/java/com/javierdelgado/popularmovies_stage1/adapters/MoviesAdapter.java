@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.javierdelgado.popularmovies_stage1;
+package com.javierdelgado.popularmovies_stage1.adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -28,6 +28,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.javierdelgado.popularmovies_stage1.R;
+import com.javierdelgado.popularmovies_stage1.activities.DetailActivity;
+import com.javierdelgado.popularmovies_stage1.model.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -39,7 +42,7 @@ import butterknife.ButterKnife;
  * Created by Delga on 03/05/2017.
  */
 
-class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder> {
+public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder> {
 
     private List<Movie> mMoviesList = null;
     private Context mContext;

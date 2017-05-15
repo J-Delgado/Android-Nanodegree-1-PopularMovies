@@ -14,29 +14,22 @@
  * limitations under the License.
  */
 
-package com.javierdelgado.popularmovies_stage1;
+package com.javierdelgado.popularmovies_stage1.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.net.Uri;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import com.javierdelgado.popularmovies_stage1.R;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
 import java.util.List;
 
 import butterknife.BindView;
@@ -48,7 +41,7 @@ import static android.view.View.GONE;
  * Created by Delga on 03/05/2017.
  */
 
-class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.TrailersViewHolder> {
+public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.TrailersViewHolder> {
 
     private List<String> mTrailersList = null;
     private Context mContext;
@@ -73,7 +66,7 @@ class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.TrailersViewH
         return mTrailersList == null ? 0 : mTrailersList.size();
     }
 
-    void setData(List<String> trailers){
+    public void setData(List<String> trailers){
         mTrailersList = trailers;
         notifyDataSetChanged();
     }

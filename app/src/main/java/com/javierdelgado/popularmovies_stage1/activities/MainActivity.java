@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.javierdelgado.popularmovies_stage1;
+package com.javierdelgado.popularmovies_stage1.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -27,6 +27,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
+
+import com.javierdelgado.popularmovies_stage1.Movie;
+import com.javierdelgado.popularmovies_stage1.MoviesAdapter;
+import com.javierdelgado.popularmovies_stage1.R;
+import com.javierdelgado.popularmovies_stage1.utils.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;

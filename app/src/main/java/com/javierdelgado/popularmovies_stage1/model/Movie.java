@@ -14,19 +14,15 @@
  * limitations under the License.
  */
 
-package com.javierdelgado.popularmovies_stage1;
-
-import android.content.Context;
+package com.javierdelgado.popularmovies_stage1.model;
 
 import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * Created by Delga on 03/05/2017.
  */
 
-class Movie implements Serializable {
+public class Movie implements Serializable {
 
     private int id;
     private String title;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.javierdelgado.popularmovies_stage1;
+package com.javierdelgado.popularmovies_stage1.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
