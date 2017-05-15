@@ -28,9 +28,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
-import com.javierdelgado.popularmovies_stage1.Movie;
-import com.javierdelgado.popularmovies_stage1.MoviesAdapter;
 import com.javierdelgado.popularmovies_stage1.R;
+import com.javierdelgado.popularmovies_stage1.adapters.MoviesAdapter;
+import com.javierdelgado.popularmovies_stage1.model.Movie;
 import com.javierdelgado.popularmovies_stage1.utils.Utils;
 
 import org.json.JSONArray;
@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private static final String POPULAR = "POPULAR";
     private static final String TOP = "TOP";
+    private static final String FAVORITE= "FAVORITE";
+
     private String mLastOptionSelected = POPULAR;
 
     private MoviesAdapter mAdapter;
@@ -107,6 +109,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         new MovieDownloaderTask().execute(TOP);
                         mToolbar.setSubtitle(R.string.highest_rated);
                         mLastOptionSelected = TOP;
+                    } else if (i == 2){
+                        mToolbar.setSubtitle(R.string.favorites);
+                        mLastOptionSelected = FAVORITE;
                     }
                 }
             });

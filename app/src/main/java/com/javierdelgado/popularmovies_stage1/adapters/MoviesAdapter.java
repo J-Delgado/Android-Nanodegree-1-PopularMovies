@@ -67,7 +67,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
         return mMoviesList == null ? 0 : mMoviesList.size();
     }
 
-    void setData(List<Movie> movies){
+    public void setData(List<Movie> movies){
         mMoviesList = movies;
         notifyDataSetChanged();
     }

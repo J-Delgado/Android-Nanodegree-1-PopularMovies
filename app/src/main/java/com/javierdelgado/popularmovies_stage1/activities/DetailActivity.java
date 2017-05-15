@@ -26,12 +26,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.javierdelgado.popularmovies_stage1.R;
+import com.javierdelgado.popularmovies_stage1.adapters.ReviewsAdapter;
 import com.javierdelgado.popularmovies_stage1.adapters.TrailersAdapter;
 import com.javierdelgado.popularmovies_stage1.model.Movie;
 import com.javierdelgado.popularmovies_stage1.utils.Utils;
@@ -58,7 +60,9 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
     public static final String KEY_MOVIE_ID = "KEY_MOVIE_ID";
     private TrailersAdapter mTrailersAdapter;
+    private ReviewsAdapter mReviewsAdapter;
     private Movie movie;
+    private boolean isFavorite = false;
     //
     @BindView(R.id.detail_trailers_recycler) RecyclerView mTrailersRecyclerView;
     @BindView(R.id.loading_trailers) ProgressBar mTrailersLoading;
@@ -71,8 +75,10 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     @BindView(R.id.movie_description) TextView movieDescription;
     @BindView(R.id.movie_release_date) TextView movieReleaseDate;
     @BindView(R.id.movie_stars) TextView movieStars;
-    @BindView(R.id.textview_error_trailer) TextView error;
-    private boolean isFavorite = false;
+    @BindView(R.id.textview_error_trailer) TextView trailer_error;
+    @BindView(R.id.detail_reviews_recycler) RecyclerView mReviewsRecyclerView;
+    @BindView(R.id.textview_error_reviews) TextView reviews_error;
+    @BindView(R.id.loading_reviews) ProgressBar mReviewsLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,10 +123,16 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             movieReleaseDate.setText(movie.getReleaseDate());
             movieStars.setText(String.valueOf(movie.getRating()));
 
+            // Trailers
             mTrailersRecyclerView.setHasFixedSize(true);
             mTrailersAdapter = new TrailersAdapter(this);
             mTrailersRecyclerView.setAdapter(mTrailersAdapter);
             new DetailActivity.TrailerDownloaderTask().execute();
+
+            // Reviews
+            mReviewsAdapter = new ReviewsAdapter();
+            mReviewsRecyclerView.setAdapter(mReviewsAdapter);
+            new DetailActivity.ReviewsDownloaderTask().execute();
 
         } else {
             Toast.makeText(this, R.string.load_movie_error, Toast.LENGTH_SHORT).show();
@@ -157,7 +169,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         @Override
         protected void onPreExecute() {
             mTrailersLoading.setVisibility(View.VISIBLE);
-            error.setVisibility(View.INVISIBLE);
+            trailer_error.setVisibility(View.INVISIBLE);
         }
 
         @Override
@@ -198,7 +210,60 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 mTrailersAdapter.setData(trailersList);
             } else {
                 mTrailersAdapter.setData(new ArrayList<String>());
-                error.setVisibility(View.VISIBLE);
+                trailer_error.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    class ReviewsDownloaderTask extends AsyncTask<Void, Void, Boolean> {
+
+        private List<String> reviewsList = new ArrayList<>();
+
+        @Override
+        protected void onPreExecute() {
+            mReviewsLoading.setVisibility(View.VISIBLE);
+            reviews_error.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
+        protected Boolean doInBackground(Void ... params) {
+            URL url;
+            try {
+                url = new URL(getResources().getString(R.string.url_base_movie)
+                        + movie.getId()
+                        + getResources().getString(R.string.url_part_reviews)
+                        + getResources().getString(R.string.API_KEY_the_movie_db)
+                );
+                URLConnection connection = url.openConnection();
+                String response = Utils.getString(connection.getInputStream());
+                //
+                JSONObject jsonObject = new JSONObject(response);
+                JSONArray results = jsonObject.getJSONArray("results");
+                for (int i=0; i < results.length(); i++){
+                    JSONObject item = results.getJSONObject(i);
+
+                    //Build item
+                    String key = item.getString("content");
+                    reviewsList.add(key);
+                }
+
+            } catch (JSONException | IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+
+            return true;
+
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            mReviewsLoading.setVisibility(View.INVISIBLE);
+            if (success) {
+                mReviewsAdapter.setData(reviewsList);
+            } else {
+                mReviewsAdapter.setData(new ArrayList<String>());
+                reviews_error.setVisibility(View.VISIBLE);
             }
         }
     }

@@ -7,6 +7,7 @@
     <string name="transition_movie_image" translatable="false">transition_movie_cover</string>
     <string name="url_base_movie" translatable="false">https://api.themoviedb.org/3/movie/</string>
     <string name="url_part_trailer" translatable="false">/videos?api_key=</string>
+    <string name="url_part_reviews" translatable="false">/reviews?api_key=</string>
     <string name="url_base_youtube" translatable="false">https://www.youtube.com/watch?v=</string>
     <string name="url_base_youtube_video_tmhb" translatable="false">https://img.youtube.com/vi/</string>
 
@@ -16,6 +17,7 @@
     <string name="choose_sort">Sort by:</string>
     <string name="most_popular">Most popular</string>
     <string name="highest_rated">Highest rated</string>
+    <string name="favorites">Favorites</string>
     <string name="error_loading_data">\nError getting data\n\nPull to refresh!!\n\nThis also works in the movie list :-)</string>
     <string name="title_activity_detail">Movie Detail</string>
     <string name="action_settings">Settings</string>
