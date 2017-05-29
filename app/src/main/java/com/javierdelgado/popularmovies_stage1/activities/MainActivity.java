@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String POPULAR = "POPULAR";
     private static final String TOP = "TOP";
     private static final String FAVORITE= "FAVORITE";
+    private static final String KEY_FILTER_SELECTED = "KEY_FILTER_SELECTED";
 
     private String mLastOptionSelected = POPULAR;
 
@@ -75,10 +76,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //
         setSupportActionBar(mToolbar);
         //
+        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_FILTER_SELECTED)){
+            mLastOptionSelected = (String) savedInstanceState.get(KEY_FILTER_SELECTED);
+        }
+        //
         mRecyclerView.setHasFixedSize(true);
         mAdapter = new MoviesAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
-        mToolbar.setSubtitle(R.string.most_popular);
+        setToolbarSubtitle();
         //
         fab.setOnClickListener(this);
         //
@@ -90,7 +95,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
         //
-        new MovieDownloaderTask().execute(POPULAR);
+        new MovieDownloaderTask().execute(mLastOptionSelected);
+    }
+
+    private void setToolbarSubtitle() {
+        int subtitle;
+        switch (mLastOptionSelected){
+            case TOP:
+                subtitle = R.string.highest_rated; break;
+            case FAVORITE:
+                subtitle = R.string.favorites; break;
+            case POPULAR:
+            default:
+                subtitle = R.string.most_popular;
+        }
+        mToolbar.setSubtitle(subtitle);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(KEY_FILTER_SELECTED, mLastOptionSelected);
     }
 
     @Override
@@ -103,16 +128,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 public void onClick(DialogInterface dialogInterface, int i) {
                     if (i == 0){
                         new MovieDownloaderTask().execute(POPULAR);
-                        mToolbar.setSubtitle(R.string.most_popular);
                         mLastOptionSelected = POPULAR;
                     } else if (i == 1){
                         new MovieDownloaderTask().execute(TOP);
-                        mToolbar.setSubtitle(R.string.highest_rated);
                         mLastOptionSelected = TOP;
                     } else if (i == 2){
-                        mToolbar.setSubtitle(R.string.favorites);
                         mLastOptionSelected = FAVORITE;
                     }
+                    setToolbarSubtitle();
                 }
             });
             AlertDialog dialog = alertBuilder.create();
