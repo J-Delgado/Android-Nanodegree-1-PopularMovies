@@ -16,7 +16,9 @@
 
 package com.javierdelgado.popularmovies_stage1.activities;
 
+import android.content.ContentValues;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -26,7 +28,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -35,6 +36,7 @@ import android.widget.Toast;
 import com.javierdelgado.popularmovies_stage1.R;
 import com.javierdelgado.popularmovies_stage1.adapters.ReviewsAdapter;
 import com.javierdelgado.popularmovies_stage1.adapters.TrailersAdapter;
+import com.javierdelgado.popularmovies_stage1.data.MovieContract;
 import com.javierdelgado.popularmovies_stage1.model.Movie;
 import com.javierdelgado.popularmovies_stage1.utils.Utils;
 import com.squareup.picasso.Picasso;
@@ -62,7 +64,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private TrailersAdapter mTrailersAdapter;
     private ReviewsAdapter mReviewsAdapter;
     private Movie movie;
-    private boolean isFavorite = false;
     //
     @BindView(R.id.detail_trailers_recycler) RecyclerView mTrailersRecyclerView;
     @BindView(R.id.loading_trailers) ProgressBar mTrailersLoading;
@@ -93,9 +94,13 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         fabFavorite.setOnClickListener(this);
         fabShare.setOnClickListener(this);
 
-        movie = null;
         if (getIntent().hasExtra(KEY_MOVIE_ID)){
             movie = (Movie) getIntent().getSerializableExtra(KEY_MOVIE_ID);
+        }
+        if (movie.isFavorite()){
+            fabFavorite.setImageDrawable(getResources().getDrawable(R.drawable.star_selected_icon));
+        } else {
+            fabFavorite.setImageDrawable(getResources().getDrawable(R.drawable.star_unselected_icon));
         }
 
         if (toolbar != null){
@@ -143,12 +148,22 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.fab_favorite){
-            isFavorite = !isFavorite;
-            if (isFavorite) {
-                ((ImageView) view).setImageDrawable(getResources().getDrawable(R.drawable.star_selected_icon));
+            if (movie.isFavorite()) {
+                boolean success = deleteFavorite();
+                if (success) {
+                    movie.setFavorite(!movie.isFavorite());
+                    ((ImageView) view).setImageDrawable(getResources().getDrawable(R.drawable.star_unselected_icon));
+                } else {
+                    Toast.makeText(getApplicationContext(),R.string.not_deleted_favorite,Toast.LENGTH_LONG).show();
+                }
             } else {
-                ((ImageView) view).setImageDrawable(getResources().getDrawable(R.drawable.star_unselected_icon));
-            }
+                boolean success = addFavorite();
+                if (success) {
+                    movie.setFavorite(!movie.isFavorite());
+                    ((ImageView) view).setImageDrawable(getResources().getDrawable(R.drawable.star_selected_icon));
+                } else {
+                    Toast.makeText(getApplicationContext(),R.string.not_added_favorite,Toast.LENGTH_LONG).show();
+                }            }
         } else if (view.getId() == R.id.fab_share) {
             String videoPath = getResources().getString(R.string.url_base_youtube)
                     + mTrailersAdapter.getTrailerUrl(0);
@@ -160,6 +175,29 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         } else {
             onBackPressed();
         }
+    }
+
+    private boolean deleteFavorite() {
+        // Prepare
+        Uri uri = MovieContract.MovieEntry.CONTENT_URI;
+        String selection = MovieContract.MovieEntry.COLUMN_MOVIE_ID + "=?";
+        String[] selectionArgs = new String[]{Integer.toString(movie.getId())};
+        // Delete
+        return getContentResolver().delete(uri, selection, selectionArgs) == 1;
+    }
+
+    private boolean addFavorite() {
+        // Prepare
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MovieContract.MovieEntry.COLUMN_BACKDROP, movie.getBackdrop());
+        contentValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, movie.getId());
+        contentValues.put(MovieContract.MovieEntry.COLUMN_POSTER, movie.getCover());
+        contentValues.put(MovieContract.MovieEntry.COLUMN_RATING, movie.getRating());
+        contentValues.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, movie.getReleaseDate());
+        contentValues.put(MovieContract.MovieEntry.COLUMN_SYNOPOSIS, movie.getDescription());
+        contentValues.put(MovieContract.MovieEntry.COLUMN_TITLE, movie.getTitle());
+        // Delete
+        return getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, contentValues) != null;
     }
 
     class TrailerDownloaderTask extends AsyncTask<Void, Void, Boolean> {

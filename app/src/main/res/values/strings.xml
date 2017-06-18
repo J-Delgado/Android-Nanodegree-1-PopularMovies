@@ -29,6 +29,9 @@
     <string name="error_loading">Error loading</string>
     <string name="share">Share movie</string>
     <string name="share_text">Have you watched</string>
+    <string name="not_added_favorite">There was an error adding favorite</string>
+    <string name="not_deleted_favorite">There was an error deleting favorite</string>
+    <string name="no_favorites">There are no favorites yet. Go to a movie detail and add your first one!</string>
 
 
 </resources>

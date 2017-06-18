@@ -18,7 +18,7 @@ package com.javierdelgado.popularmovies_stage1.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
@@ -28,13 +28,13 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.javierdelgado.popularmovies_stage1.R;
 import com.javierdelgado.popularmovies_stage1.adapters.MoviesAdapter;
+import com.javierdelgado.popularmovies_stage1.data.MovieContract;
 import com.javierdelgado.popularmovies_stage1.model.Movie;
 import com.javierdelgado.popularmovies_stage1.utils.Utils;
 
@@ -50,6 +50,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.view.View.GONE;
 
 /**
  * Created by Delga on 03/05/2017.
@@ -71,6 +73,7 @@ public class MainActivity extends AppCompatActivity
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.main_recyclerview) RecyclerView mRecyclerView;
+    @BindView(R.id.empty_view) LinearLayout mEmptyView;
     @BindView(R.id.swipe_refresh) SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.fab_filter) FloatingActionButton fab;
     @BindView(R.id.error_textview) TextView error;
@@ -116,18 +119,47 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // If the menu selected is favorite, update list
+        if (mLastOptionSelected.equals(FAVORITE)){
+            Cursor movies = getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI,
+                    null,
+                    null,
+                    null,
+                    null);
+            if (movies.getCount() > 0) {
+                mAdapter.setData(movies);
+                mEmptyView.setVisibility(GONE);
+                mRecyclerView.setVisibility(View.VISIBLE);
+            } else {
+                mAdapter.setData(new ArrayList<Movie>());
+                mEmptyView.setVisibility(View.VISIBLE);
+                mRecyclerView.setVisibility(View.GONE);
+            }
+            movies.close();
+        }
+    }
+
     private void setToolbarSubtitle() {
         int subtitle;
         switch (mLastOptionSelected){
             case TOP:
+                mSwipeRefreshLayout.setEnabled(true);
                 subtitle = R.string.highest_rated; break;
             case FAVORITE:
+                mSwipeRefreshLayout.setEnabled(false);
+                error.setVisibility(GONE);
                 subtitle = R.string.favorites; break;
             case POPULAR:
             default:
+                mSwipeRefreshLayout.setEnabled(true);
                 subtitle = R.string.most_popular;
         }
         mToolbar.setSubtitle(subtitle);
+
     }
 
     @Override
@@ -154,6 +186,8 @@ public class MainActivity extends AppCompatActivity
                         } else {
                             loaderManager.restartLoader(DOWNLOAD_MOVIES_LOADER, queryBundle, MainActivity.this);
                         }
+                        mEmptyView.setVisibility(GONE);
+                        mRecyclerView.setVisibility(View.VISIBLE);
                         mLastOptionSelected = POPULAR;
                     } else if (i == 1){
                         queryBundle.putString(KEY_FILTER_SELECTED, TOP);
@@ -162,8 +196,25 @@ public class MainActivity extends AppCompatActivity
                         } else {
                             loaderManager.restartLoader(DOWNLOAD_MOVIES_LOADER, queryBundle, MainActivity.this);
                         }
+                        mEmptyView.setVisibility(GONE);
+                        mRecyclerView.setVisibility(View.VISIBLE);
                         mLastOptionSelected = TOP;
                     } else if (i == 2){
+                        Cursor movies = getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI,
+                                null,
+                                null,
+                                null,
+                                null);
+                        if (movies.getCount() > 0) {
+                            mAdapter.setData(movies);
+                            mEmptyView.setVisibility(GONE);
+                            mRecyclerView.setVisibility(View.VISIBLE);
+                        } else {
+                            mAdapter.setData(new ArrayList<Movie>());
+                            mEmptyView.setVisibility(View.VISIBLE);
+                            mRecyclerView.setVisibility(View.GONE);
+                        }
+                        movies.close();
                         mLastOptionSelected = FAVORITE;
                     }
                     setToolbarSubtitle();
@@ -186,12 +237,12 @@ public class MainActivity extends AppCompatActivity
             @Override
             protected void onStartLoading() {
 
-                mSwipeRefreshLayout.setRefreshing(true);
                 error.setVisibility(View.INVISIBLE);
                 //
                 if (mMoviesResult != null) {
                     deliverResult(mMoviesResult);
                 } else {
+                    mSwipeRefreshLayout.setRefreshing(true);
                     forceLoad();
                 }
             }

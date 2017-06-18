@@ -19,6 +19,7 @@ package com.javierdelgado.popularmovies_stage1.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
@@ -30,9 +31,11 @@ import android.widget.ImageView;
 
 import com.javierdelgado.popularmovies_stage1.R;
 import com.javierdelgado.popularmovies_stage1.activities.DetailActivity;
+import com.javierdelgado.popularmovies_stage1.data.MovieContract;
 import com.javierdelgado.popularmovies_stage1.model.Movie;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -72,6 +75,25 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
         notifyDataSetChanged();
     }
 
+    public void setData(Cursor movies) {
+        List<Movie> list = new ArrayList<>();
+        while (movies.moveToNext()) {
+            int id = movies.getInt(movies.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_ID));
+            String title = movies.getString(movies.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE));
+            String cover = movies.getString(movies.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER));
+            String backdrop = movies.getString(movies.getColumnIndex(MovieContract.MovieEntry.COLUMN_BACKDROP));
+            String releaseDate = movies.getString(movies.getColumnIndex(MovieContract.MovieEntry.COLUMN_RELEASE_DATE));
+            double rating = movies.getDouble(movies.getColumnIndex(MovieContract.MovieEntry.COLUMN_RATING));
+            String description = movies.getString(movies.getColumnIndex(MovieContract.MovieEntry.COLUMN_SYNOPOSIS));
+            // Create movie
+            Movie movie = new  Movie(id, title, cover, backdrop, releaseDate, rating, description);
+            movie.setFavorite(true);
+            list.add(movie);
+        }
+        mMoviesList = list;
+        notifyDataSetChanged();
+    }
+
     class MoviesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         Context context;
@@ -96,7 +118,19 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
         public void onClick(View view) {
             Intent detailIntent = new Intent(mContext, DetailActivity.class);
 
-            detailIntent.putExtra(DetailActivity.KEY_MOVIE_ID,mMoviesList.get(getAdapterPosition()));
+            // If the movie is in database, then it is favorite
+            Movie movie = mMoviesList.get(getAdapterPosition());
+            String selection = MovieContract.MovieEntry.COLUMN_MOVIE_ID + "=?";
+            String[] selectionArgs = new String[]{Integer.toString(movie.getId())};
+            Cursor query = mContext.getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI,
+                    null,
+                    selection,
+                    selectionArgs,
+                    null);
+            if (query.getCount() == 1) {
+                movie.setFavorite(true);
+            }
+            detailIntent.putExtra(DetailActivity.KEY_MOVIE_ID,movie);
 
             //Set up transition
             Pair<View, String> pair_cover = Pair.create((View) movieCover, mContext.getString(R.string.transition_movie_image));

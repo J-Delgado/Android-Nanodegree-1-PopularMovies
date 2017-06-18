@@ -12,6 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <provider
+            android:name=".data.MovieContentProvider"
+            android:authorities="com.javierdelgado.popularmovies"
+            android:exported="false"/>
+
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/title_activity_main"

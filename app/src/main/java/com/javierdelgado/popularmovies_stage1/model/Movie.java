@@ -31,6 +31,7 @@ public class Movie implements Serializable {
     private double rating;
     private String description;
     private String backdrop;
+    private boolean favorite;
 
     public Movie(int id, String title, String cover, String backdrop, String releaseDate, double rating, String description) {
         this.id = id;
@@ -40,7 +41,16 @@ public class Movie implements Serializable {
         this.releaseDate = releaseDate;
         this.rating = rating;
         this.description = description;
+        // Favorite false by default
+        this.favorite = false;
+    }
 
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
     }
 
     public int getId() {

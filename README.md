@@ -16,7 +16,6 @@ This is the app that I have built for Popular Movies Stage 1. First project in t
 * Uses Content Provider to store the Favorite movies and stores most of its information to check offline.
 * In the movie detail, the Trailers and Reviews are shown in a horizontal scroll view using Recycler Views.
 * In the movie detail, the actions Favorite and Share are shown in Floating Action Buttons.
-* Added Kotlin support
 
 ## External APIs
 
@@ -34,3 +33,5 @@ This app uses Picasso to request movie covers and cache them:
 ![screen](../master/art/movieList.png)
 ![screen](../master/art/movieDetail.png)
 ![screen](../master/art/movieDetail2.png)
+![screen](../master/art/movieDetail3.png)
+![screen](../master/art/favorites.png)
