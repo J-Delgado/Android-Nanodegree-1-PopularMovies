@@ -26,6 +26,7 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity
     private static final String TOP = "TOP";
     private static final String FAVORITE= "FAVORITE";
     private static final String KEY_FILTER_SELECTED = "KEY_FILTER_SELECTED";
+    private static final String KEY_RECYCLER_OFFSET = "KEY_RECYCLER_OFFSET";
 
     private String mLastOptionSelected = POPULAR;
 
@@ -77,6 +79,7 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.swipe_refresh) SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.fab_filter) FloatingActionButton fab;
     @BindView(R.id.error_textview) TextView error;
+    private int mRecyclerViewOffset = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +92,7 @@ public class MainActivity extends AppCompatActivity
         //
         if (savedInstanceState != null && savedInstanceState.containsKey(KEY_FILTER_SELECTED)){
             mLastOptionSelected = (String) savedInstanceState.get(KEY_FILTER_SELECTED);
+            mRecyclerViewOffset = (Integer) savedInstanceState.get(KEY_RECYCLER_OFFSET);
         }
         //
         mRecyclerView.setHasFixedSize(true);
@@ -132,6 +136,7 @@ public class MainActivity extends AppCompatActivity
                     null);
             if (movies.getCount() > 0) {
                 mAdapter.setData(movies);
+                mRecyclerView.scrollToPosition(mRecyclerViewOffset);
                 mEmptyView.setVisibility(GONE);
                 mRecyclerView.setVisibility(View.VISIBLE);
             } else {
@@ -166,6 +171,9 @@ public class MainActivity extends AppCompatActivity
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(KEY_FILTER_SELECTED, mLastOptionSelected);
+        GridLayoutManager layoutManager = (GridLayoutManager) mRecyclerView.getLayoutManager();
+        outState.putInt(KEY_RECYCLER_OFFSET, layoutManager.findFirstVisibleItemPosition());
+
     }
 
     @Override
@@ -207,6 +215,7 @@ public class MainActivity extends AppCompatActivity
                                 null);
                         if (movies.getCount() > 0) {
                             mAdapter.setData(movies);
+                            mRecyclerView.scrollToPosition(mRecyclerViewOffset);
                             mEmptyView.setVisibility(GONE);
                             mRecyclerView.setVisibility(View.VISIBLE);
                         } else {
@@ -302,6 +311,7 @@ public class MainActivity extends AppCompatActivity
         mSwipeRefreshLayout.setRefreshing(false);
         if (data != null) {
             mAdapter.setData(data);
+            mRecyclerView.scrollToPosition(mRecyclerViewOffset);
         } else {
             mAdapter.setData(new ArrayList<Movie>());
             error.setVisibility(View.VISIBLE);
