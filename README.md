@@ -1,8 +1,8 @@
-# Android Nanodegree Popular Movies Stage 1
+# Android Nanodegree Popular Movies
 
 This is the app that I have built for Popular Movies Stage 1. First project in the Android Developer Nanodegree. This app implements show the most popular movies information and their details. I have tried to use the newest Material Design features when it was possible.
 
-## Features Stage 1
+## Features Stage 1 (branch stage1)
 
 * Upon launch, present the user with a grid arrangement of movie posters using Recycler View.
 * The user can use "Pull to refresh" to update the data (Useful when previously there was no internet connection).
@@ -10,7 +10,7 @@ This is the app that I have built for Popular Movies Stage 1. First project in t
 * When the user taps on a movie, there is an animation to open the movie detail.
 * The movie detail includes original title, movie poster, a plot synopsis, user rating, release date and a image backdrop with animated Toolbar.
 
-## Features Stage 2
+## Features Stage 2 (master)
 
 * Different amount of movies per row depending on device width 
 * Uses Content Provider to store the Favorite movies and stores most of its information to check offline.
