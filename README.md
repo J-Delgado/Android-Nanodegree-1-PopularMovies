@@ -1,6 +1,6 @@
 # Android Nanodegree Popular Movies
 
-This is the app that I have built for Popular Movies Stage 1. First project in the Android Developer Nanodegree. This app implements show the most popular movies information and their details. I have tried to use the newest Material Design features when it was possible.
+This is the app that I have built for Popular Movies. First project in the Android Developer Nanodegree. This app implements show the most popular movies information and their details. I have tried to use the newest Material Design features when it was possible.
 
 ## Features Stage 1 (branch stage1)
 
